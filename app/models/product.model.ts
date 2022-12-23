@@ -1,19 +1,19 @@
 
 import {DataTypes, Model, Sequelize} from 'sequelize';
-import sequelize from 'config/db.config';
+import sequelize from '../config/db.config';
 
-class Product extends Model {}
+export class Product extends Model {}
 
 Product.init({
     BankId: {
         type: DataTypes.STRING,
     },
     BankName: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
     },
 },
 {
-    sequelize: sequelize,
+    sequelize,
     modelName: 'Product',
     tableName: 'tblbanks',
     timestamps: false,

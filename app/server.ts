@@ -1,7 +1,13 @@
 import express, {Router} from 'express';
 import * as dotenv from "dotenv";
-import rootRouter from './routes';
+import 'reflect-metadata';
+import './bindings/di';
+import './bindings/types';
+import rootRouter from './rootRouter';
 import bodyParser from 'body-parser';
+import path from 'path';
+import livereload from 'livereload';
+import connectLiveReload from 'connect-livereload';
 
 // import allRoute = module('.route/route');
 dotenv.config();
@@ -9,7 +15,17 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+const liveReloadServer = livereload.createServer();
+liveReloadServer.watch(path.join(__dirname, "app"));
+liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+        liveReloadServer.refresh("/");
+    }, 100);
+});
+app.use(connectLiveReload());
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:true}));
 
@@ -24,3 +40,6 @@ app.use('/', rootRouter);
 app.listen(port, () => {
     console.log(`Timezones by location application is running on port ${port}.`);
 });
+
+
+
